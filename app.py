@@ -13,7 +13,7 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     intro = db.Column(db.String(300), nullable=False)
-    text = db.Column(db.Text, nullable=False)
+    text = db.Column(db.String(10000), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow())
 
     def __repr__(self):
@@ -27,19 +27,26 @@ post_model = api.model('Post', model={'id': fields.Integer(description='The id',
                                       'Text': fields.String(description='The text', readonly=False),
                                       'Data': fields.DateTime(dt_format='rfc822')})
 
-
 post_parser = api.parser()
-post_parser.add_argument("post_id", request=False, location="args")
-post_parser.add_argument("title", request=False, location="args")
+post_parser.add_argument("post_id", required=False, location="args")
+post_parser.add_argument("title", required=False, location="args")
+
+
+def split_args(args: str) -> list:
+    if "," in args:
+        return args.split(",")
+    return [args]
+
+
+def split_dict_args(dict_args: dict) -> dict:
+    return {
+        key: split_args(value)
+        for key, value in dict_args.items()
+    }
 
 
 @api.route('/api-post/<int:post_id>')
 class Post(Resource):
-    @api.expect(post_parser)
-    def get(self, post_id):
-        article = Article.query.get(post_id)
-        return {'id': article.id, 'Title': article.title, 'Intro': article.intro, 'Text': article.text,
-                'Data': str(article.date.date())}
 
     @api.expect(post_model)
     def put(self, id):
@@ -55,7 +62,8 @@ class Post(Resource):
         except:
             return "Error DB"
 
-    def delete(self, post_id):
+    @staticmethod
+    def delete(post_id):
         article = Article.query.get_or_404(post_id)
 
         try:
@@ -67,17 +75,19 @@ class Post(Resource):
 
 @api.route('/api-post')
 class AllPosts(Resource):
-    @staticmethod
-    def get():
-        articles = Article.query.all()
-        all_post = {}
-        for i in range(len(articles)):
-            all_post[i] = {'id': articles[i].id,
-                           'Title': articles[i].title,
-                           'Intro': articles[i].intro,
-                           'Text': articles[i].text,
-                           'Data': str(articles[i].date.date())}
-        return all_post
+    @api.marshal_with(post_model)
+    @api.expect(post_parser)
+    def get(self):
+        args = split_dict_args(request.args)
+
+        if "post_id" in args:
+            article = Article.query.filter(Article.id.in_(args["post_id"]))
+        if "title" in args:
+            article = Article.query.filter(Article.title.in_(args["title"]))
+
+        articles = article.all()
+
+        return articles
 
     @api.expect(post_model)
     def post(self):
