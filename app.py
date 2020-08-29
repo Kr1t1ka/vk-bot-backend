@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect
-from flask_restx import fields, Api, Resource
+from flask import Flask, render_template, request, redirect, json
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+
+from connection import confirmation_token
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
@@ -18,90 +19,6 @@ class Article(db.Model):
 
     def __repr__(self):
         return '<Article %r>' % self.id
-
-
-api = Api(app)
-post_model = api.model('Post', model={'id': fields.Integer(description='The id', readonly=True),
-                                      'Title': fields.String(description='The title', readonly=False),
-                                      'Intro': fields.String(description='The intro', readonly=False),
-                                      'Text': fields.String(description='The text', readonly=False),
-                                      'Data': fields.DateTime(dt_format='rfc822')})
-
-post_parser = api.parser()
-post_parser.add_argument("post_id", required=False, location="args")
-post_parser.add_argument("title", required=False, location="args")
-
-
-def split_args(args: str) -> list:
-    if "," in args:
-        return args.split(",")
-    return [args]
-
-
-def split_dict_args(dict_args: dict) -> dict:
-    return {
-        key: split_args(value)
-        for key, value in dict_args.items()
-    }
-
-
-@api.route('/api-post/<int:post_id>')
-class Post(Resource):
-
-    @api.expect(post_model)
-    def put(self, id):
-        post = api.payload
-
-        article = Article.query.get(id)
-        article.title = post['title']
-        article.intro = post['intro']
-        article.text = post['text']
-        try:
-            db.session.commit()
-            return "Done"
-        except:
-            return "Error DB"
-
-    @staticmethod
-    def delete(post_id):
-        article = Article.query.get_or_404(post_id)
-
-        try:
-            db.session.delete(article)
-            db.session.commit()
-        except:
-            return "Error_DB"
-
-
-@api.route('/api-post')
-class AllPosts(Resource):
-    @api.marshal_with(post_model)
-    @api.expect(post_parser)
-    def get(self):
-        args = split_dict_args(request.args)
-
-        if "post_id" in args:
-            article = Article.query.filter(Article.id.in_(args["post_id"]))
-        if "title" in args:
-            article = Article.query.filter(Article.title.in_(args["title"]))
-
-        articles = article.all()
-
-        return articles
-
-    @api.expect(post_model)
-    def post(self):
-        post = api.payload
-        title = post['Title']
-        intro = post['Intro']
-        text = post['Text']
-
-        article = Article(title=title, intro=intro, text=text)
-        try:
-            db.session.add(article)
-            db.session.commit()
-        except:
-            return "Error_DB"
 
 
 @app.route('/home')
@@ -174,6 +91,32 @@ def create_article():
 
     else:
         return render_template("create-article.html")
+
+
+@app.route('/', methods=['POST'])
+def processing():
+    # Распаковываем json из пришедшего POST-запроса
+    data = json.loads(request.data)
+    # Вконтакте в своих запросах всегда отправляет поле типа
+    if 'type' not in data.keys():
+        return 'not vk'
+    if data['type'] == 'confirmation':
+        return confirmation_token
+    elif data['type'] == 'message_new':
+        title = str(data['object']['message']['text'])
+        intro = str(data['object']['message']['peer_id'])
+        text = str(data)
+
+        article = Article(title=title, intro=intro, text=text)
+
+        try:
+            db.session.add(article)
+            db.session.commit()
+
+        except:
+            return "При добавлении статьи произошла ошибка"
+
+        return 'ok'
 
 
 if __name__ == '__main__':
