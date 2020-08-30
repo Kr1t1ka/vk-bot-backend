@@ -1,12 +1,15 @@
-from flask import Flask, render_template, request, redirect, json
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 from bot_api.connection import confirmation_token
 from bot_api.vk_bot_response import *
+from main import db, app
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db_utils'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)
 
 
 @app.route('/', methods=['POST'])
@@ -21,18 +24,14 @@ def processing():
     elif data['type'] == 'message_new':
         text = str(data['object']['message']['text'])
         peer_id = str(data['object']['message']['peer_id'])
-
         bot_response(peer_id=peer_id, user_reques=text)
-
         return 'ok'
 
 
-@app.route('/test')
+@app.route('/admin')
 def hello_world():
-    # args = {'text': 'медпункт'}
-    # # tmp = get_search(args)
-    return 'tmp'
+    return 'Hello admin!'
 
 
-if __name__ == '__main__':
-    app.run(debug=False)
+# if __name__ == '__main__':
+#     app.run(debug=False)

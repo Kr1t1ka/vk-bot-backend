@@ -1,6 +1,6 @@
 import re
 
-from db.db import Menu, Attachment, Inheritances, Replace
+from db_utils.database import Menu, Attachment, Inheritances
 from utils.request_utils import processing_user_request, replace_abbr
 from utils.response_utils import smart_search
 

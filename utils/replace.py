@@ -1,7 +1,7 @@
 import re
 from itertools import chain
 
-from db.db import Replace
+from db_utils.database import Replace
 
 
 def text_replace(filling_obj):

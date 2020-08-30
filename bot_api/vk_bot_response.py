@@ -1,6 +1,6 @@
 from bot_api.methods import send_message, create_keyboard
 from bot_api.connection import vk_session
-from db.select_db import select_menu, get_search
+from db_utils.select_db import select_menu, get_search
 import time
 
 
