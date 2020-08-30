@@ -45,5 +45,5 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='мед пункт')
-    # print(time.time() - tmp)
+    bot_response(peer_id=83886028, user_request='Где')
+    print(time.time() - tmp)

@@ -50,7 +50,7 @@ def select_menu(args):
     try:
         menu = menu_select.filter_by(active=True).all()
     except Exception as e:
-        abort(422, 'Something WRONG - {}'.format(e))
+        print('Something WRONG - {}'.format(e))
 
     if 'filled_text' in args:
         if args['filled_text'] == 'true':
@@ -62,9 +62,7 @@ def select_menu(args):
     return menu
 
 
-
 def get_search(args):
-
     if 'text' in args:
         user_request = re.sub("[\".,«»()–:!?@\-]", ' ', args['text'][0].lower())
         user_request = user_request.lstrip().rstrip().strip()
