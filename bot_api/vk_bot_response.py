@@ -1,6 +1,6 @@
 from bot_api.methods import send_message, create_keyboard
 from bot_api.connection import vk_session
-from db_utils.select_db import select_menu, get_search
+from db_utils.select_db import select_menu, get_search, select_inheritances
 import time
 
 
@@ -12,12 +12,13 @@ def bot_response(peer_id, user_request):
 
         message = response[0].name + '\n' + response[0].text
 
-        if response[0].attachment:
+        if response[0].attachment.all():
             if response[0].attachment[0].vk_active:
                 attachment = response[0].attachment[0].vk_attachment
 
-        if response[0].inheritances:
-            menu_id_ancestor = response[0].inheritances
+        inher = select_inheritances({'menu_id': str(response[0].id)})
+        if inher:
+            menu_id_ancestor = inher
 
             menu_ids_descendant = [inheritances.menu_id_descendant for inheritances in menu_id_ancestor]
             menu_ids_descendant.extend([inheritances.menu_id_ancestor for inheritances in menu_id_ancestor])
@@ -25,8 +26,7 @@ def bot_response(peer_id, user_request):
 
             if response[0].id in menu_ids:
                 menu_ids.remove(response[0].id)
-
-            menus = get_menu(menu_ids=list(menu_ids))
+            menus = select_menu({'menu_ids': list(menu_ids)})
             name_arr = [menu.name for menu in menus]
             keyboard = create_keyboard(name_arr=name_arr, inline=False)
 

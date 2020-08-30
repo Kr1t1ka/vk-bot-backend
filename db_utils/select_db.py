@@ -1,5 +1,6 @@
 import re
 from flask import request, abort
+from sqlalchemy import or_, and_
 
 from db_utils.database import Menu, Attachment, Inheritances
 from utils.request_utils import processing_user_request, replace_abbr
@@ -23,10 +24,10 @@ def select_inheritances(args):
     if 'menu_id' in args:
         inhers = Inheritances.query.filter(
             or_(
-                Inheritances.menu_id_ancestor.in_(args['menu_id']),
+                Inheritances.menu_id_ancestor == args['menu_id'],
                 and_(
-                    Inheritances.menu_id_descendant.in_(args['menu_id']),
-                    Inheritances.reversible == True
+                    Inheritances.menu_id_descendant == args['menu_id'],
+                    Inheritances.reversible == 1
                 )
             )
         )
@@ -39,25 +40,20 @@ def select_inheritances(args):
 
 
 def select_menu(args):
-    menu_select = Menu.query
-    if 'menu_ids' in args:
-        menu_select = Menu.query.filter(Menu.id.in_(args['menu_ids']))
-    if 'menu_names' in args:
-        menu_select = Menu.query.filter(Menu.name.in_(args['menu_names']))
-    if 'menu_authors' in args:
-        menu_select = Menu.query.filter(Menu.author_id.in_(args['menu_authors']))
-
+    menu = Menu.query.all()
     try:
-        menu = menu_select.filter_by(active=True).all()
+        if 'menu_names' in args:
+            menu = Menu.query.filter(Menu.name == args['menu_names']).all()
+        if 'menu_ids' in args:
+            menu = []
+            for i in args['menu_ids']:
+                menu.extend(Menu.query.filter(Menu.id == i).all())
     except Exception as e:
         print('Something WRONG - {}'.format(e))
 
     if 'filled_text' in args:
         if args['filled_text'] == 'true':
             text_replace(menu)
-
-    if not menu:
-        return {}
 
     return menu
 
