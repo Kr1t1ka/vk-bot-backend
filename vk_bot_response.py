@@ -1,6 +1,6 @@
-from app.vk_api.methods import send_message, create_keyboard
-from app.connection import vk_session
-from app.library_api.methods import *
+from bot_api.methods import send_message, create_keyboard
+from connection import vk_session
+from library_api.methods import *
 import time
 
 

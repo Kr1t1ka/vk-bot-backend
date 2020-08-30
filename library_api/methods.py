@@ -1,6 +1,6 @@
 import requests
 import time
-from app.connection import library_api
+from connection import library_api
 
 
 def get_menu(menu_ids=None, menu_names=None, menu_authors=None, filled_text=True):
