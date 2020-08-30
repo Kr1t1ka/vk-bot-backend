@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 from connection import confirmation_token
+from vk_bot_response import bot_response
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
@@ -103,18 +104,10 @@ def processing():
     if data['type'] == 'confirmation':
         return confirmation_token
     elif data['type'] == 'message_new':
-        title = str(data['object']['message']['text'])
-        intro = str(data['object']['message']['peer_id'])
-        text = str(data)
+        text = str(data['object']['message']['text'])
+        peer_id = str(data['object']['message']['peer_id'])
 
-        article = Article(title=title, intro=intro, text=text)
-
-        try:
-            db.session.add(article)
-            db.session.commit()
-
-        except:
-            return "При добавлении статьи произошла ошибка"
+        bot_response(peer_id=peer_id, user_reques=text)
 
         return 'ok'
 
