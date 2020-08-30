@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, json
 from flask_sqlalchemy import SQLAlchemy
 
 from bot_api.connection import confirmation_token
@@ -24,7 +24,7 @@ def processing():
     elif data['type'] == 'message_new':
         text = str(data['object']['message']['text'])
         peer_id = str(data['object']['message']['peer_id'])
-        bot_response(peer_id=peer_id, user_reques=text)
+        bot_response(peer_id=peer_id, user_request=text)
         return 'ok'
 
 

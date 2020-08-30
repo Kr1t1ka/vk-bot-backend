@@ -6,7 +6,6 @@ import time
 
 def bot_response(peer_id, user_request):
     response = select_menu({'menu_names': user_request})
-
     if isinstance(response, list) and response:
         keyboard = None
         attachment = None
@@ -46,5 +45,5 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='Мед пункт')
-    # print(time.time() - tmp)
+    bot_response(peer_id=83886028, user_request='Где')
+    print(time.time() - tmp)
