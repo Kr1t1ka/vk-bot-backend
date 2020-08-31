@@ -12,7 +12,7 @@ def smart_search(request_arr):
     :return: [<Menu>,...  ]
     """
     all_menu = Menu.query.all()
-    index_lib_tags = {menu.id: menu.tags.split(' ') for menu in all_menu}
+    index_lib_tags = {menu.id: str(menu.tags).split(' ') for menu in all_menu}
     index_lib_text = {menu.id: create_index(menu.text) for menu in all_menu}
     menu_rating = {menu.id: 0 for menu in all_menu}
 
