@@ -37,7 +37,7 @@ def bot_response(peer_id, user_request):
                      user_attachment=attachment)
 
     else:
-        response = sorted(get_search({'text': user_request})[0], key=lambda obj: obj['rating'])
+        response = sorted(get_search({'text': user_request}), key=lambda obj: obj['rating'])
         response.reverse()
         message = response[0]['menu'].name + '\n' + response[0]['menu'].text
         send_message(session=vk_session, peer_id=peer_id, message=message)
@@ -45,5 +45,5 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='Где')
+    bot_response(peer_id=83886028, user_request='иксс')
     print(time.time() - tmp)

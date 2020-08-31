@@ -54,13 +54,12 @@ def select_menu(args):
     if 'filled_text' in args:
         if args['filled_text'] == 'true':
             text_replace(menu)
-
     return menu
 
 
 def get_search(args):
     if 'text' in args:
-        user_request = re.sub("[\".,«»()–:!?@\-]", ' ', args['text'][0].lower())
+        user_request = re.sub("[\".,«»()–:!?@\-]", ' ', args['text'].lower())
         user_request = user_request.lstrip().rstrip().strip()
         user_request = re.sub(r'\s+', ' ', user_request)
         user_request = replace_abbr(user_request).split(' ')
@@ -68,6 +67,6 @@ def get_search(args):
         if 'ваня' in res:
             res.remove('ваня')
         res = smart_search(res)
-        return res, 200
+        return res
     else:
-        return {}, 404
+        return {}
