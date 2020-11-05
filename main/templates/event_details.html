@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ event.name }}
+{% endblock %}
+
+{% block body %}
+    <div class="container -mt-5">
+        <h1>{{ event.name }}</h1>
+        <div class="alert alert-info">
+            <h2>{{ event.name }}</h2>
+            <p>ID: {{ event.id }}</p>
+            {% for el in inher_event %}
+                <p>Тип мероприятия: {{ el.name }}</p>
+            {% endfor %}
+            <p>{{ event.text }}</p>
+            <a href="/event/{{ event.id }}/update" class="btn btn-success">Редактировать</a>
+            <a href="/event/{{ event.id }}/del" class="btn btn-danger">Удалить</a>
+            <a href="/event/{{ event.id }}/inher" class="btn btn-warning">Добавить тип мероприятия</a>
+        </div>
+    </div>
+{% endblock %}

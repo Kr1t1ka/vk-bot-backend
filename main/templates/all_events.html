@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Мероприятия
+{% endblock %}
+
+{% block body %}
+    <div class="container -mt-5">
+        <h1>Все мероприятия</h1>
+            {% for el in events %}
+            <div class="alert alert-info">
+                <h2>{{ el.name }}</h2>
+                <p>{{ el.text }}</p>
+                <a href="/event/{{ el.id }}" class="btn btn-warning">Детальнее</a>
+            </div>
+            {% endfor %}
+    </div>
+{% endblock %}

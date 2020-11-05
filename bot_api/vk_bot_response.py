@@ -4,6 +4,19 @@ from db_utils.select_db import select_menu, get_search, select_inheritances
 import time
 
 
+def menus(inher, response=None):
+    menu_id_ancestor = inher
+
+    menu_ids_descendant = [inheritances.menu_id_descendant for inheritances in menu_id_ancestor]
+    menu_ids_descendant.extend([inheritances.menu_id_ancestor for inheritances in menu_id_ancestor])
+    menu_ids = set(menu_ids_descendant)
+
+    if response:
+        if response[0].id in menu_ids:
+            menu_ids.remove(response[0].id)
+    return select_menu({'menu_ids': list(menu_ids)})
+
+
 def bot_response(peer_id, user_request):
     response = select_menu({'menu_names': user_request})
     if isinstance(response, list) and response:
@@ -18,16 +31,8 @@ def bot_response(peer_id, user_request):
 
         inher = select_inheritances({'menu_id': str(response[0].id)})
         if inher:
-            menu_id_ancestor = inher
-
-            menu_ids_descendant = [inheritances.menu_id_descendant for inheritances in menu_id_ancestor]
-            menu_ids_descendant.extend([inheritances.menu_id_ancestor for inheritances in menu_id_ancestor])
-            menu_ids = set(menu_ids_descendant)
-
-            if response[0].id in menu_ids:
-                menu_ids.remove(response[0].id)
-            menus = select_menu({'menu_ids': list(menu_ids)})
-            name_arr = [menu.name for menu in menus]
+            all_menus = menus(inher, response)
+            name_arr = [menu.name for menu in all_menus]
             keyboard = create_keyboard(name_arr=name_arr, inline=False)
 
         send_message(session=vk_session,

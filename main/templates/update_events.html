@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Редактирование мероприятия
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Редактирование мероприятия</h1>
+    <form method="post">
+        <input type="text" name="name" id="name" class="form-control" value="{{ event.name }}" placeholder="Введите название мероприятия"><br>
+        <textarea name="text" id="text" class="form-control" placeholder="Введите описание мероприятия">{{ event.text }}</textarea><br>
+        <input type="submit" class="btn btn-success" value="Отправить">
+    </form>
+</div>
+
+{% endblock %}

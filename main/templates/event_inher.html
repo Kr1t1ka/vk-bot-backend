@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Создание нового мероприятия
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Типы мероприятия {{ event.name }} ID: {{ event.id }}</h1>
+    <h4>Уже существующие типы</h4>
+    {% for el in inher_event %}
+        <div class="alert alert-info">
+            <h6>Тип мероприятия:</h6>
+            <p>{{ el[0].name }} ID: {{ el[0].id }}<br></p>
+            <form method="post">
+                <input type="hidden" name="index" value={{ el[1].id_inher }}>
+                <input type="submit" class="btn btn-danger" value="Удалить">
+            </form>
+        </div>
+    {% endfor %}
+    <h4>Добавить новое</h4>
+    <form method="post">
+        <input type="text" name="name" id="id_inher" class="form-control" placeholder="Введите ID нового типа"><br>
+        <input type="hidden" name="index" value="2">
+        <input type="submit" class="btn btn-success" value="Добавить">
+    </form>
+</div>
+
+{% endblock %}
