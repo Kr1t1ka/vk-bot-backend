@@ -1,6 +1,7 @@
 from bot_api.methods import send_message, create_keyboard
 from bot_api.connection import vk_session
 from db_utils.select_db import select_menu, get_search, select_inheritances
+from itertools import groupby
 import time
 
 
@@ -9,10 +10,9 @@ def menus(inher, response=None):
 
     menu_ids_descendant = [inheritances.menu_id_descendant for inheritances in menu_id_ancestor]
     menu_ids_descendant.extend([inheritances.menu_id_ancestor for inheritances in menu_id_ancestor])
-    menu_ids = set(menu_ids_descendant)
-
+    menu_ids = [el for el, _ in groupby(menu_ids_descendant)]
     if response:
-        if response[0].id in menu_ids:
+        while response[0].id in menu_ids:
             menu_ids.remove(response[0].id)
     return select_menu({'menu_ids': list(menu_ids)})
 
@@ -34,7 +34,6 @@ def bot_response(peer_id, user_request):
             all_menus = menus(inher, response)
             name_arr = [menu.name for menu in all_menus]
             keyboard = create_keyboard(name_arr=name_arr, inline=False)
-
         send_message(session=vk_session,
                      peer_id=peer_id,
                      message=message,
@@ -50,5 +49,5 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='иксс')
+    bot_response(peer_id=83886028, user_request='Факультеты')
     print(time.time() - tmp)

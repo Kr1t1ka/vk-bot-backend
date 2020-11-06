@@ -33,7 +33,10 @@ def create_keyboard(name_arr, inline=False, one_time=True):
         if count == 12:
             break
         count += 1
-        user_keyboard.add_button(name, color=VkKeyboardColor.DEFAULT)
+        if name == name_arr[-1]:
+            user_keyboard.add_button(name, color=VkKeyboardColor.NEGATIVE)
+        else:
+            user_keyboard.add_button(name, color=VkKeyboardColor.PRIMARY)
         if (count % 2 == 0) and (name != name_arr[-1]) and (count <= 10):
             user_keyboard.add_line()
     user_keyboard = user_keyboard.get_keyboard()
