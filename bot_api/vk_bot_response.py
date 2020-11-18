@@ -60,7 +60,7 @@ def bot_response(peer_id, user_request):
             keyboard = None
             attachment = None
 
-            message = response[0].name + '\n' + response[0].text
+            message = response[0].text
 
             if response[0].attachment.all():
                 if response[0].attachment[0].vk_active:
