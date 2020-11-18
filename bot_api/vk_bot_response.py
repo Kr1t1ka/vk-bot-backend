@@ -23,8 +23,7 @@ def menus(inher, response=None):
 def bot_response(peer_id, user_request):
     response = select_menu({'menu_names': user_request})
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
-    print(user_status)
-    if user_status:
+    if user_status and user_status != 'Главное меню':
         problem_message = f'От: https://vk.com/id{peer_id}.\n' \
                           f'Проблема: {user_request}'
         send_message(session=vk_session, peer_id=83886028, message=problem_message)
@@ -36,7 +35,28 @@ def bot_response(peer_id, user_request):
                                                                       f'перешлите это сообщение @pavel.json,\n'
                                                                       f'Он все починит \n\n{error}')
     else:
-        if isinstance(response, list) and response:
+        if user_request == 'У меня проблема':
+            inher = select_inheritances({'menu_id': str(response[0].id)})
+            if inher:
+                all_menus = menus(inher, response)
+                name_arr = [menu.name for menu in all_menus]
+                keyboard = create_keyboard(name_arr=name_arr, inline=False)
+            problem = Replace(name=peer_id)
+            send_message(session=vk_session,
+                         peer_id=peer_id,
+                         message='Опишите в чем заключается проблема, '
+                                 'одним сообщением.',
+                         user_keyboard=keyboard, )
+            try:
+                db.session.add(problem)
+                db.session.commit()
+            except Exception as error:
+                send_message(session=vk_session,
+                             peer_id=peer_id,
+                             message=f'Возникла ошибка в работе бота, '
+                                     f'перешлите это сообщение @pavel.json,\n'
+                                     f'Он все починит \n\n{error}')
+        elif isinstance(response, list) and response:
             keyboard = None
             attachment = None
 
@@ -56,15 +76,6 @@ def bot_response(peer_id, user_request):
                          message=message,
                          user_keyboard=keyboard,
                          user_attachment=attachment)
-        elif user_request == 'У меня проблема':
-            problem = Replace(name=peer_id)
-            try:
-                db.session.add(problem)
-                db.session.commit()
-            except Exception as error:
-                send_message(session=vk_session, peer_id=peer_id, message=f'Возникла ошибка в работе бота, '
-                                                                          f'перешлите это сообщение @pavel.json,\n'
-                                                                          f'Он все починит \n\n{error}')
         else:
             response = sorted(get_search({'text': user_request}), key=lambda obj: obj['rating'])
             response.reverse()
@@ -74,5 +85,5 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='ламба или фера ')
+    bot_response(peer_id=83886028, user_request='У меня проблема')
     print(time.time() - tmp)
