@@ -23,10 +23,11 @@ def menus(inher, response=None):
 def bot_response(peer_id, user_request):
     response = select_menu({'menu_names': user_request})
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
-    if user_status and user_request != 'Главное меню':
-        problem_message = f'От: https://vk.com/id{peer_id}.\n' \
-                          f'Проблема: {user_request}'
-        send_message(session=vk_session, peer_id=83886028, message=problem_message)
+    if user_status:
+        if user_request != 'Главное меню':
+            problem_message = f'От: https://vk.com/id{peer_id}.\n' \
+                              f'Проблема: {user_request}'
+            send_message(session=vk_session, peer_id=83886028, message=problem_message)
         try:
             db.session.delete(user_status[0])
             db.session.commit()
