@@ -16,7 +16,8 @@ def send_message(session, peer_id, message=None, user_attachment=None, user_keyb
         'message': message,
         'random_id': random.randint(-2147483648, +2147483648),
         "attachment": user_attachment,
-        'keyboard': user_keyboard
+        'keyboard': user_keyboard,
+        'dont_parse_links': 1
     })
 
 
