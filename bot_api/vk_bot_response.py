@@ -30,7 +30,6 @@ def bot_response(peer_id, user_request):
         try:
             db.session.delete(user_status[0])
             db.session.commit()
-            bot_response(peer_id=peer_id, user_request='Главное меню')
         except Exception as error:
             send_message(session=vk_session, peer_id=peer_id, message=f'Возникла ошибка в работе бота, '
                                                                       f'перешлите это сообщение @pavel.json,\n'
