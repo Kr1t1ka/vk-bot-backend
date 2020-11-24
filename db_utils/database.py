@@ -65,3 +65,47 @@ class Replace(db.Model):
 
     def __repr__(self):
         return '<Replace %r>' % self.id
+
+
+# class Users(db.Model):
+#     __tablename__ = "users"
+#
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(240), unique=True, nullable=False)
+#     poll_step = db.Column(db.Integer, default=0)
+#     poll = db.Column(db.Integer, default=0)
+#
+#     def __repr__(self):
+#         return '<Users %r>' % self.id
+#
+#
+# class Poll(db.Model):
+#     __tablename__ = 'poll'
+#
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(240), default='Poll name')
+#     step_limit = db.Column(db.Integer, default=10)
+#
+#     def __repr__(self):
+#         return '<Poll %r>' % self.id
+#
+#
+# class PollStep(db.Model):
+#     __tablename__ = 'poll_step'
+#
+#     id = db.Column(db.Model, primary_key=True)
+#     question = db.Column(db.String(1000), default='вопрос в опросе')
+#     poll_id = db.Column(db.Integer, default=0)
+#
+#     def __repr__(self):
+#         return '<PollStep %r>' % self.id
+#
+#
+# class User
+
+
+
+
+
+
+

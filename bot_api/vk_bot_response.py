@@ -23,11 +23,16 @@ def menus(inher, response=None):
 def bot_response(peer_id, user_request):
     response = select_menu({'menu_names': user_request})
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
+    print(user_status)
     if user_status:
         if user_request != 'Главное меню':
             problem_message = f'От: https://vk.com/id{peer_id}.\n' \
                               f'Проблема: {user_request}'
+            response_message = 'Спасибо, ваша жалоба передана Студенческому совету СПбГУТ. ' \
+                               'Вам ответят в ближайшее время, если этого не произошло, ' \
+                               'напишите Председателю Студенческого совета - @ksilligan'
             send_message(session=vk_session, peer_id=83886028, message=problem_message)
+            send_message(session=vk_session, peer_id=peer_id, message=response_message)
         try:
             db.session.delete(user_status[0])
             db.session.commit()
@@ -37,7 +42,7 @@ def bot_response(peer_id, user_request):
                                                                       f'перешлите это сообщение @pavel.json,\n'
                                                                       f'Он все починит \n\n{error}')
     else:
-        if user_request == 'У меня проблема':
+        if user_request == 'Помогите':
             inher = select_inheritances({'menu_id': str(response[0].id)})
             if inher:
                 all_menus = menus(inher, response)
@@ -87,5 +92,5 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='У меня проблема')
+    bot_response(peer_id=83886028, user_request='Главное меню')
     print(time.time() - tmp)
