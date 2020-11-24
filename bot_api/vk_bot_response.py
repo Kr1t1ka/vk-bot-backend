@@ -54,7 +54,7 @@ def bot_response(peer_id, user_request):
                                                                       f'перешлите это сообщение @pavel.json,\n'
                                                                       f'Он все починит \n\n{error}')
     else:
-        if user_request == 'Помогите' or user_request == 'Анкета':
+        if user_request == 'Помощь' or user_request == 'Анкета':
             inher = select_inheritances({'menu_id': str(response[0].id)})
             if inher:
                 all_menus = menus(inher, response)
