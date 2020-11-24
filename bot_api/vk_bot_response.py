@@ -25,7 +25,7 @@ def bot_response(peer_id, user_request):
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
     print(user_status)
     if user_status:
-        if user_request != 'Главное меню':
+        if user_request != 'Главное меню' and user_request != 'Партнеры':
             if user_status[0].value == 'помощь':
                 problem_message = f'От: https://vk.com/id{peer_id}.\n' \
                                   f'Проблема: {user_request}'
