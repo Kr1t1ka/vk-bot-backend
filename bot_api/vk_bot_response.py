@@ -26,13 +26,25 @@ def bot_response(peer_id, user_request):
     print(user_status)
     if user_status:
         if user_request != 'Главное меню':
-            problem_message = f'От: https://vk.com/id{peer_id}.\n' \
-                              f'Проблема: {user_request}'
-            response_message = 'Спасибо, ваша жалоба передана Студенческому совету СПбГУТ. ' \
-                               'Вам ответят в ближайшее время, если этого не произошло, ' \
-                               'напишите Председателю Студенческого совета - @ksilligan'
-            send_message(session=vk_session, peer_id=83886028, message=problem_message)
-            send_message(session=vk_session, peer_id=peer_id, message=response_message)
+            if user_status[0].value == 'помощь':
+                problem_message = f'От: https://vk.com/id{peer_id}.\n' \
+                                  f'Проблема: {user_request}'
+                response_message = 'Спасибо, ваша жалоба передана Студенческому совету СПбГУТ. ' \
+                                   'Вам ответят в ближайшее время, если этого не произошло, ' \
+                                   'напишите Председателю Студенческого совета - @ksilligan'
+                send_message(session=vk_session, peer_id=83886028, message=problem_message)
+                send_message(session=vk_session, peer_id=peer_id, message=response_message)
+            else:
+                partner_message = f'От: https://vk.com/id{peer_id}.\n' \
+                                  f'Заявка: {user_request}'
+                response_message = 'Спасибо, ваша заявка передана в Комитет по внешним связям СПбГУТ. ' \
+                                   'Вам ответят в ближайшее время, если этого не произошло, ' \
+                                   'напишите - @catherinka_pro'
+                send_message(session=vk_session, peer_id=89187609, message=partner_message)
+                send_message(session=vk_session, peer_id=83886028, message=partner_message)
+                send_message(session=vk_session, peer_id=147736000, message=partner_message)
+                send_message(session=vk_session, peer_id=peer_id, message=response_message)
+
         try:
             db.session.delete(user_status[0])
             db.session.commit()
@@ -42,18 +54,34 @@ def bot_response(peer_id, user_request):
                                                                       f'перешлите это сообщение @pavel.json,\n'
                                                                       f'Он все починит \n\n{error}')
     else:
-        if user_request == 'Помогите':
+        if user_request == 'Помогите' or user_request == 'Анкета':
             inher = select_inheritances({'menu_id': str(response[0].id)})
             if inher:
                 all_menus = menus(inher, response)
                 name_arr = [menu.name for menu in all_menus]
                 keyboard = create_keyboard(name_arr=name_arr, inline=False)
-            problem = Replace(name=peer_id)
-            send_message(session=vk_session,
-                         peer_id=peer_id,
-                         message='Опишите в чем заключается проблема, '
-                                 'одним сообщением.',
-                         user_keyboard=keyboard, )
+            if user_request == 'Помогите':
+                problem = Replace(name=peer_id, value='помощь')
+                send_message(session=vk_session,
+                             peer_id=peer_id,
+                             message='Опишите в чем заключается проблема, '
+                                     'одним сообщением.',
+                             user_keyboard=keyboard, )
+            else:
+                problem = Replace(name=peer_id, value='анкета')
+                send_message(session=vk_session,
+                             peer_id=peer_id,
+                             message='📋 После заполнения формы отправь ее боту:\n'
+                                     '1) *Название мероприятия*\n'
+                                     '2) *Краткое описание мероприятия*\n'
+                                     '3) *Место проведения*\n'
+                                     '4) *Дата*\n'
+                                     '5) *Контакты организатора мероприятия*\n'
+                                     '6) *Пожелания по партнерам:\n'
+                                     '1. Название организации\n'
+                                     '2. Ссылки на организацию\n'
+                                     '3. Контакты организации*',
+                             user_keyboard=keyboard, )
             try:
                 db.session.add(problem)
                 db.session.commit()
