@@ -114,7 +114,7 @@ def bot_response(peer_id, user_request):
         else:
             response = sorted(get_search({'text': user_request}), key=lambda obj: obj['rating'])
             response.reverse()
-            message = response[0]['menu'].name + '\n' + response[0]['menu'].text
+            message = response[0]['menu'].text
             send_message(session=vk_session, peer_id=peer_id, message=message)
 
 
