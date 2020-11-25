@@ -60,7 +60,7 @@ def bot_response(peer_id, user_request):
                 all_menus = menus(inher, response)
                 name_arr = [menu.name for menu in all_menus]
                 keyboard = create_keyboard(name_arr=name_arr, inline=False)
-            if user_request == 'Помогите':
+            if user_request == 'Помощь':
                 problem = Replace(name=peer_id, value='помощь')
                 send_message(session=vk_session,
                              peer_id=peer_id,
