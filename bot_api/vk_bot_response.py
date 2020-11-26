@@ -77,7 +77,7 @@ def bot_response(peer_id, user_request):
                              peer_id=peer_id,
                              message=f'Возникла ошибка в работе бота, '
                                      f'перешлите это сообщение @pavel.json,\n'
-                                     f'Он все починит \n\n{error}')
+                                     f'Он, скорее всего, все починит \n\n{error}')
         elif isinstance(response, list) and response:
             keyboard = None
             attachment = None
