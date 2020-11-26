@@ -24,7 +24,7 @@ def bot_response(peer_id, user_request):
     user_request = user_request.replace('@public194566616, ', '')
     response = select_menu({'menu_names': user_request})
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
-    print(user_status)
+    print(user_request)
     if user_status:
         if user_request != 'Главное меню' and user_request != 'Партнеры':
             if user_status[0].value == 'помощь':
@@ -93,6 +93,7 @@ def bot_response(peer_id, user_request):
                 if 'Анкета' in name_arr:
                     name_arr.remove('Анкета')
                     if peer_id > 2000000000:
+                        print('БЕСЕДА')
                         keyboard = create_keyboard(name_arr=name_arr,
                                                    inline=True,
                                                    link_button={'label': 'Анкета',
@@ -105,6 +106,7 @@ def bot_response(peer_id, user_request):
 
                 else:
                     if peer_id > 2000000000:
+                        print('БЕСЕДА')
                         keyboard = create_keyboard(name_arr=name_arr, inline=True)
                     else:
                         keyboard = create_keyboard(name_arr=name_arr, inline=False)
