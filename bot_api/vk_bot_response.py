@@ -74,7 +74,7 @@ def bot_response(peer_id, user_request):
                              peer_id=peer_id,
                              message=f'Возникла ошибка в работе бота, '
                                      f'перешлите это сообщение @pavel.json,\n'
-                                     f'Он все починит \n\n{error}')
+                                     f'Он ывсе починит \n\n{error}')
         elif isinstance(response, list) and response:
             keyboard = None
             attachment = None
@@ -111,7 +111,7 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='Партнеры')
+    bot_response(peer_id=83886028, user_request='Партнерыыы')
     print(time.time() - tmp)
     # send_message(session=vk_session,
     #              peer_id=83886028,
