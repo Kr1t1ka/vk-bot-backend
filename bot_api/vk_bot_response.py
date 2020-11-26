@@ -25,6 +25,8 @@ def bot_response(peer_id, user_request):
     response = select_menu({'menu_names': user_request})
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
     print(user_request)
+    print(response)
+    print(peer_id)
     if user_status:
         if user_request != 'Главное меню' and user_request != 'Партнеры':
             if user_status[0].value == 'помощь':
@@ -124,7 +126,7 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='Партнеры')
+    bot_response(peer_id=83886028, user_request='Главное меню')
     print(time.time() - tmp)
     # send_message(session=vk_session,
     #              peer_id=83886028,
