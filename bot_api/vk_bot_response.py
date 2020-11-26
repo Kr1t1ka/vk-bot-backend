@@ -21,6 +21,7 @@ def menus(inher, response=None):
 
 
 def bot_response(peer_id, user_request):
+    user_request = user_request.replace('@public194566616, ', '')
     response = select_menu({'menu_names': user_request})
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
     print(user_status)
@@ -91,12 +92,22 @@ def bot_response(peer_id, user_request):
                 name_arr = [menu.name for menu in all_menus]
                 if 'Анкета' in name_arr:
                     name_arr.remove('Анкета')
-                    keyboard = create_keyboard(name_arr=name_arr,
-                                               inline=False,
-                                               link_button={'label': 'Анкета',
-                                                            'link': 'https://vk.com/app5619682_-194566616#537797'})
+                    if peer_id > 2000000000:
+                        keyboard = create_keyboard(name_arr=name_arr,
+                                                   inline=True,
+                                                   link_button={'label': 'Анкета',
+                                                                'link': 'https://vk.com/app5619682_-194566616#537797'})
+                    else:
+                        keyboard = create_keyboard(name_arr=name_arr,
+                                                   inline=False,
+                                                   link_button={'label': 'Анкета',
+                                                                'link': 'https://vk.com/app5619682_-194566616#537797'})
+
                 else:
-                    keyboard = create_keyboard(name_arr=name_arr, inline=False)
+                    if peer_id > 2000000000:
+                        keyboard = create_keyboard(name_arr=name_arr, inline=True)
+                    else:
+                        keyboard = create_keyboard(name_arr=name_arr, inline=False)
             send_message(session=vk_session,
                          peer_id=peer_id,
                          message=message,
