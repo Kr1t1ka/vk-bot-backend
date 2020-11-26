@@ -54,34 +54,18 @@ def bot_response(peer_id, user_request):
                                                                       f'перешлите это сообщение @pavel.json,\n'
                                                                       f'Он все починит \n\n{error}')
     else:
-        if user_request == 'Помощь' or user_request == 'Анкета':
+        if user_request == 'Помощь':
             inher = select_inheritances({'menu_id': str(response[0].id)})
             if inher:
                 all_menus = menus(inher, response)
                 name_arr = [menu.name for menu in all_menus]
                 keyboard = create_keyboard(name_arr=name_arr, inline=False)
-            if user_request == 'Помощь':
-                problem = Replace(name=peer_id, value='помощь')
-                send_message(session=vk_session,
-                             peer_id=peer_id,
-                             message='Опишите в чем заключается проблема, '
-                                     'одним сообщением.',
-                             user_keyboard=keyboard, )
-            else:
-                problem = Replace(name=peer_id, value='анкета')
-                send_message(session=vk_session,
-                             peer_id=peer_id,
-                             message='📋 После заполнения формы отправь ее боту:\n'
-                                     '1) *Название мероприятия*\n'
-                                     '2) *Краткое описание мероприятия*\n'
-                                     '3) *Место проведения*\n'
-                                     '4) *Дата*\n'
-                                     '5) *Контакты организатора мероприятия*\n'
-                                     '6) *Пожелания по партнерам(сфера деятельности партнера):\n'
-                                     '1. Название организации(необязательно)\n'
-                                     '2. Ссылки на организацию(необязательно)\n'
-                                     '3. Контакты организации(необязательно)',
-                             user_keyboard=keyboard, )
+            problem = Replace(name=peer_id, value='помощь')
+            send_message(session=vk_session,
+                         peer_id=peer_id,
+                         message='Опишите в чем заключается проблема, '
+                                 'одним сообщением.',
+                         user_keyboard=keyboard, )
             try:
                 db.session.add(problem)
                 db.session.commit()
