@@ -12,6 +12,7 @@ from db_utils.select_db import select_inheritances
 def processing():
     # Распаковываем json из пришедшего POST-запроса
     data = json.loads(request.data)
+    print(data)
     # Вконтакте в своих запросах всегда отправляет поле типа
     if 'type' not in data.keys():
         return 'not vk'
