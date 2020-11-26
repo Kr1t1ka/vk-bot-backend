@@ -90,7 +90,7 @@ def bot_response(peer_id, user_request):
                 all_menus = menus(inher, response)
                 name_arr = [menu.name for menu in all_menus]
                 if 'Анкета' in name_arr:
-                    name_arr.pop('Анкета')
+                    name_arr.remove('Анкета')
                     keyboard = create_keyboard(name_arr=name_arr,
                                                inline=False,
                                                link_button={'label': 'Анкета',
@@ -111,9 +111,9 @@ def bot_response(peer_id, user_request):
 
 if __name__ == '__main__':
     tmp = time.time()
-    bot_response(peer_id=83886028, user_request='Главное меню')
+    bot_response(peer_id=83886028, user_request='Партнеры')
     print(time.time() - tmp)
-    send_message(session=vk_session,
-                 peer_id=83886028,
-                 message=f'1',
-                 user_keyboard=create_keyboard(link_button={'label': 'тест', 'link': 'https://vk.com/public194566616'}))
+    # send_message(session=vk_session,
+    #              peer_id=83886028,
+    #              message=f'1',
+    #              user_keyboard=create_keyboard(link_button={'label': 'тест', 'link': 'https://vk.com/public194566616'}))

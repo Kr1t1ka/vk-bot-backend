@@ -40,7 +40,9 @@ def create_keyboard(name_arr=None, inline=False, one_time=True, link_button: dic
             count += 1
             if name == name_arr[-1] and len(name_arr) != 1:
                 if link_button is not None:
+                    # user_keyboard.add_line()
                     user_keyboard.add_openlink_button(label=link_button['label'], link=link_button['link'])
+                    user_keyboard.add_line()
                 user_keyboard.add_button(name, color=VkKeyboardColor.NEGATIVE)
             else:
                 user_keyboard.add_button(name, color=VkKeyboardColor.PRIMARY)
