@@ -23,24 +23,28 @@ def send_message(session, peer_id, message=None, user_attachment=None, user_keyb
     })
 
 
-def create_keyboard(name_arr, inline=False, one_time=True):
+def create_keyboard(name_arr=None, inline=False, one_time=True, link_button: dict = None):
     """
     (len(name_arr_descendant) <= 10) - должно быть
+    :param link_button: добавляет кнопку со ссылкой
     :param one_time: исчезает ли клавиатура после нажатия (по умолчанию исчезает)
     :param inline:  встроеная клавиатура в сообщение (по умолчанию нет)
     :type name_arr: массив названий кнопок потомков
     """
     user_keyboard = VkKeyboard(one_time=one_time, inline=inline)
     count = 0
-    for name in name_arr:
-        if count == 12:
-            break
-        count += 1
-        if name == name_arr[-1] and len(name_arr) != 1:
-            user_keyboard.add_button(name, color=VkKeyboardColor.NEGATIVE)
-        else:
-            user_keyboard.add_button(name, color=VkKeyboardColor.PRIMARY)
-        if (count % 2 == 0) and (name != name_arr[-1]) and (count <= 10):
-            user_keyboard.add_line()
+    if name_arr is not None:
+        for name in name_arr:
+            if count == 12:
+                break
+            count += 1
+            if name == name_arr[-1] and len(name_arr) != 1:
+                if link_button is not None:
+                    user_keyboard.add_openlink_button(label=link_button['label'], link=link_button['link'])
+                user_keyboard.add_button(name, color=VkKeyboardColor.NEGATIVE)
+            else:
+                user_keyboard.add_button(name, color=VkKeyboardColor.PRIMARY)
+            if (count % 2 == 0) and (name != name_arr[-1]) and (count <= 10):
+                user_keyboard.add_line()
     user_keyboard = user_keyboard.get_keyboard()
     return user_keyboard

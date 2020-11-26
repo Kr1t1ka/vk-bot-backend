@@ -89,7 +89,14 @@ def bot_response(peer_id, user_request):
             if inher:
                 all_menus = menus(inher, response)
                 name_arr = [menu.name for menu in all_menus]
-                keyboard = create_keyboard(name_arr=name_arr, inline=False)
+                if 'Анкета' in name_arr:
+                    name_arr.pop('Анкета')
+                    keyboard = create_keyboard(name_arr=name_arr,
+                                               inline=False,
+                                               link_button={'label': 'Анкета',
+                                                            'link': 'https://vk.com/app5619682_-194566616#537797'})
+                else:
+                    keyboard = create_keyboard(name_arr=name_arr, inline=False)
             send_message(session=vk_session,
                          peer_id=peer_id,
                          message=message,
@@ -106,3 +113,7 @@ if __name__ == '__main__':
     tmp = time.time()
     bot_response(peer_id=83886028, user_request='Главное меню')
     print(time.time() - tmp)
+    send_message(session=vk_session,
+                 peer_id=83886028,
+                 message=f'1',
+                 user_keyboard=create_keyboard(link_button={'label': 'тест', 'link': 'https://vk.com/public194566616'}))
