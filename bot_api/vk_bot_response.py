@@ -21,7 +21,7 @@ def menus(inher, response=None):
 
 
 def bot_response(peer_id, user_request):
-    user_request = user_request.replace('@public194566616, ', '')
+    user_request = user_request.replace('[club194566616|@public194566616], ', '')
     response = select_menu({'menu_names': user_request})
     user_status = Replace.query.filter(Replace.name == str(peer_id)).all()
     print(user_request)
