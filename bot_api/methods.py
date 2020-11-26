@@ -3,8 +3,9 @@ import random
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 
 
-def send_message(session, peer_id, message=None, user_attachment=None, user_keyboard=None):
+def send_message(session, peer_id, message=None, user_attachment=None, user_keyboard=None, template=None):
     """
+    :param template: обьект описывающий шаблон сообщения
     :type session: сессия вк устававлимая через токен
     :type peer_id: id пользователя
     :type message: сообщение для пользователя
@@ -17,7 +18,8 @@ def send_message(session, peer_id, message=None, user_attachment=None, user_keyb
         'random_id': random.randint(-2147483648, +2147483648),
         "attachment": user_attachment,
         'keyboard': user_keyboard,
-        'dont_parse_links': 1
+        'dont_parse_links': 1,
+        'template': template
     })
 
 

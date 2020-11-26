@@ -61,11 +61,89 @@ def bot_response(peer_id, user_request):
                 name_arr = [menu.name for menu in all_menus]
                 keyboard = create_keyboard(name_arr=name_arr, inline=False)
             problem = Replace(name=peer_id, value='помощь')
+            element1 = {
+                "type": "carousel",
+                "elements": [{
+                    "photo_id": "-109837093_457242811",
+                    "action": {
+                        "type": "open_photo"
+                    },
+                    "buttons": [{
+                        "action": {
+                            "type": "text",
+                            "label": "Текст кнопки 🌚",
+                            "payload": "{}"
+                        }
+                    }]
+                },
+                    {
+                        "photo_id": "-109837093_457242811",
+                        "action": {
+                            "type": "open_photo"
+                        },
+                        "buttons": [{
+                            "action": {
+                                "type": "text",
+                                "label": "Текст кнопки 2",
+                                "payload": "{}"
+                            }
+                        }]
+                    },
+                    {
+                        "photo_id": "-109837093_457242811",
+                        "action": {
+                            "type": "open_photo"
+                        },
+                        "buttons": [{
+                            "action": {
+                                "type": "text",
+                                "label": "Текст кнопки 3",
+                                "payload": "{}"
+                            }
+                        }]
+                    }
+                ]
+            }
+            element2 = {
+                "title": "element2",
+                "description": "Description",
+                "action": {
+                    "type": "open_link",
+                    "link": "https://vk.com"
+                },
+                "photo_id": "-109837093_457242809",
+                "buttons": [{
+                    "action": {
+                        "type": "text",
+                        "label": "Label"
+                    }
+                }]
+            }
+            element3 = {
+                "title": "element3",
+                "description": "Description",
+                "action": {
+                    "type": "open_link",
+                    "link": "https://vk.com"
+                },
+                "photo_id": "-109837093_457242809",
+                "buttons": [{
+                    "action": {"type": "open_link", "link": "https://vk.com"}
+                }]
+            }
             send_message(session=vk_session,
                          peer_id=peer_id,
                          message='Опишите в чем заключается проблема, '
                                  'одним сообщением.',
-                         user_keyboard=keyboard, )
+                         user_keyboard=keyboard,
+                         template={
+                             "type": "carousel",
+                             "elements": [
+                                 element1,
+                                 element2,
+                                 element3
+                             ]
+                         })
             try:
                 db.session.add(problem)
                 db.session.commit()
